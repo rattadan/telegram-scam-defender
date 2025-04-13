@@ -19,11 +19,15 @@ A Telegram bot that uses LLM (Meta-Llama-3-2-3B-Instruct) via Akash API to check
    source venv/bin/activate
    pip install -r requirements.txt
    ```
-3. Create a `.env` file with your credentials:
+3. Create a `.env` file with your credentials and configuration:
    ```
    TELEGRAM_TOKEN=your_telegram_token
    AKASH_API_KEY=your_akash_api_key
+   CONTENT_MODERATION_PROMPT="You are a content moderation assistant. Analyze the following message and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'."
+   USERNAME_MODERATION_PROMPT="You are a content moderation assistant. Analyze the following username and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'."
    ```
+
+   You can customize the moderation prompts to adjust how strictly the bot filters content.
 4. Run the bot:
    ```
    python telegram-ban-bot.py
