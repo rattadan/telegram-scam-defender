@@ -33,6 +33,40 @@ A Telegram bot that uses LLM (Meta-Llama-3-2-3B-Instruct) via Akash API to check
 
 For 24/7 operation, deploy to a VPS using the provided systemd service file or use a service like PythonAnywhere.
 
+## Docker Deployment
+
+You can also run this bot in a Docker container:
+
+1. Build the Docker image:
+
+   ```bash
+   docker build -t telegram-ban-bot .
+   ```
+
+2. Run the container:
+
+   ```bash
+   docker run -d --name telegram-ban-bot --env-file .env telegram-ban-bot
+   ```
+
+3. View container logs:
+
+   ```bash
+   docker logs telegram-ban-bot
+   ```
+
+4. Stop the container:
+
+   ```bash
+   docker stop telegram-ban-bot
+   ```
+
+5. Start the container again:
+
+   ```bash
+   docker start telegram-ban-bot
+   ```
+
 ## License
 
 MIT
