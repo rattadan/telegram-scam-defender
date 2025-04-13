@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 AKASH_API_KEY = os.getenv("AKASH_API_KEY")
+CONTENT_MODERATION_PROMPT = os.getenv("CONTENT_MODERATION_PROMPT", "You are a content moderation assistant. Analyze the following message and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'.")
+USERNAME_MODERATION_PROMPT = os.getenv("USERNAME_MODERATION_PROMPT", "You are a content moderation assistant. Analyze the following username and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'.")
 
 # Initialize OpenAI client with Akash endpoint
 client = OpenAI(
@@ -42,7 +44,7 @@ async def check_content(text: str) -> bool:
         response = client.chat.completions.create(
             model="Meta-Llama-3-2-3B-Instruct",
             messages=[
-                {"role": "system", "content": "You are a content moderation assistant. Analyze the following message and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'."},
+                {"role": "system", "content": CONTENT_MODERATION_PROMPT},
                 {"role": "user", "content": text}
             ],
             temperature=0.0
@@ -64,7 +66,7 @@ async def check_username(username: str) -> bool:
         response = client.chat.completions.create(
             model="Meta-Llama-3-2-3B-Instruct",
             messages=[
-                {"role": "system", "content": "You are a content moderation assistant. Analyze the following username and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'."},
+                {"role": "system", "content": USERNAME_MODERATION_PROMPT},
                 {"role": "user", "content": username}
             ],
             temperature=0.0
