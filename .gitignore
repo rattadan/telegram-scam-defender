@@ -3,6 +3,7 @@
 
 # Python virtual environment
 venv/
+newenv/
 __pycache__/
 *.py[cod]
 *$py.class

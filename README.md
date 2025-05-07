@@ -1,76 +1,173 @@
-# Telegram Moderation Bot
+# Telegram Moderation Bot with Ollama Integration
 
-A Telegram bot that uses LLM (Meta-Llama-3-2-3B-Instruct) via Akash API to check messages and usernames for abusive or offensive content. The bot automatically deletes inappropriate messages.
+The most powerful way to keep scammers away from your Community
+
+A powerful Telegram moderation bot that uses local LLMs via Ollama to detect and remove inappropriate content, scams, and spam from your Telegram groups. The bot features hybrid moderation with different character personalities and can analyze both text and images.
 
 ## Features
 
-- Analyzes message content for inappropriate material
-- Checks usernames for offensive content
-- Automatically deletes messages that violate content policies
-- Notifies the chat when content has been removed
-- Uses Meta-Llama-3-2-3B-Instruct model via Akash API
+- **Hybrid Content Moderation**: Uses different models for optimal performance
+  - Llama 3.2 for text analysis and chat responses
+  - Vision models for image processing and scam detection
+- **Comprehensive Scam Detection**: Identifies and removes:
+  - Phishing attempts and social engineering
+  - Gift card scams and fake giveaways
+  - Crypto investment schemes
+  - Tech support and virus alert scams
+  - Job offer scams and get-rich-quick schemes
+- **Image Analysis**: Detects inappropriate images and visual scams
 
-## Setup
+- **Progressive Discipline**: Three-strike system for violators
+- **Customizable Personalities**: Choose from multiple character personas
+  - Sheriff Terence Hill: Laid-back, witty lawman
+  - Batman: Dark, brooding vigilante
+  - RoboCop: Precise, mechanical enforcer
+  - Rambo: Terse, intense survivor
+- **LLM-Generated Responses**: Dynamic, character-driven moderation messages
 
-1. Clone this repository
-2. Install dependencies:
+## Requirements
+
+- Python 3.8+
+- [Ollama](https://ollama.ai/) installed locally with the following models:
+  - `llama3.2-vision:latest` (for text and image analysis)
+  - `moondream:latest` (alternative vision model)
+- Telegram Bot Token (from [@BotFather](https://t.me/botfather))
+
+## Installation
+
+1. **Clone this repository**
+
+   ```bash
+   git clone https://github.com/yourusername/telegram-ban-bot.git
+   cd telegram-ban-bot_ollama
    ```
-   python -m venv venv
-   source venv/bin/activate
+
+2. **Create a virtual environment**
+
+   ```bash
+   python -m venv newenv
+   source newenv/bin/activate  # On Windows: newenv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+
+   ```bash
    pip install -r requirements.txt
    ```
-3. Create a `.env` file with your credentials and configuration:
-   ```
-   TELEGRAM_TOKEN=your_telegram_token
-   AKASH_API_KEY=your_akash_api_key
-   CONTENT_MODERATION_PROMPT="You are a content moderation assistant. Analyze the following message and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'."
-   USERNAME_MODERATION_PROMPT="You are a content moderation assistant. Analyze the following username and determine if it contains abusive, offensive, harmful, or inappropriate content. Reply with only 'SAFE' or 'UNSAFE'."
+
+4. **Prepare Ollama**
+
+   Ensure Ollama is installed and running. Pull the required models:
+
+   ```bash
+   ollama pull llama3.2-vision:latest
+   ollama pull moondream:latest
    ```
 
-   You can customize the moderation prompts to adjust how strictly the bot filters content.
-4. Run the bot:
+   Check available models with:
+
+   ```bash
+   ollama list
    ```
+
+5. **Create a .env file**
+
+   Copy the example config file and customize it:
+
+   ```bash
+   cp .env.example .env
+   # Edit .env with your favorite editor
+   ```
+
+6. **Start the bot**
+
+   ```bash
    python telegram-ban-bot.py
    ```
 
-## Deployment
+## Telegram Bot Setup
 
-For 24/7 operation, deploy to a VPS using the provided systemd service file or use a service like PythonAnywhere.
+1. **Create a new bot**
+   - Contact [@BotFather](https://t.me/botfather) on Telegram
+   - Send `/newbot` and follow the instructions
+   - Copy the API token and add it to your `.env` file
 
-## Docker Deployment
+2. **Configure Group Permissions**
+   - Add your bot to your Telegram group
+   - Make the bot an admin with these permissions:
+     - Delete messages
+     - Ban users
+     - Pin messages (optional but recommended)
+   - The bot does NOT need to see all messages by default
 
-You can also run this bot in a Docker container:
+3. **Privacy Settings**
+   - Send `/setprivacy` to @BotFather
+   - Select your bot
+   - Set it to `Disable` if you want the bot to see all messages in the group
+   - Set it to `Enable` if you only want the bot to see messages that start with a command (in this case, the bot will only moderate messages when it's @mentioned)
 
-1. Build the Docker image:
+## Customization
 
-   ```bash
-   docker build -t telegram-ban-bot .
-   ```
+All customization options are available in the `.env` file:
 
-2. Run the container:
+### Basic Configuration
 
-   ```bash
-   docker run -d --name telegram-ban-bot --env-file .env telegram-ban-bot
-   ```
+```env
+TELEGRAM_TOKEN=your_telegram_token_here
+OLLAMA_BASE_URL=http://localhost:11434
+TEXT_MODEL=llama3.2-vision:latest
+VISION_MODEL=llama3.2-vision:latest
+```
 
-3. View container logs:
 
-   ```bash
-   docker logs telegram-ban-bot
-   ```
+## Running as a Service
 
-4. Stop the container:
+### Systemd (Linux)
 
-   ```bash
-   docker stop telegram-ban-bot
-   ```
+Create a systemd service file:
 
-5. Start the container again:
+```bash
+sudo nano /etc/systemd/system/telegram-ban-bot.service
+```
 
-   ```bash
-   docker start telegram-ban-bot
-   ```
+Add the following content (adjust paths as needed):
 
-## License
+```ini
+[Unit]
+Description=Telegram Moderation Bot
+After=network.target
 
-MIT
+[Service]
+User=yourusername
+WorkingDirectory=/path/to/telegram-ban-bot_ollama
+Environment="PATH=/path/to/telegram-ban-bot_ollama/newenv/bin"
+ExecStart=/path/to/telegram-ban-bot_ollama/newenv/bin/python telegram-ban-bot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start the service:
+
+```bash
+sudo systemctl enable telegram-ban-bot
+sudo systemctl start telegram-ban-bot
+```
+
+### Docker
+
+To run with Docker, create a `Dockerfile`:
+
+```Dockerfile
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "telegram-ban-bot.py"]
+```
