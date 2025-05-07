@@ -27,6 +27,16 @@ A powerful Telegram moderation bot that uses local LLMs via Ollama to detect and
 
 ## Requirements
 
+ **Memory Requirements**:
+  - At least 6.5 GB of available RAM for running `llama3.2-vision:latest` model
+  - At least 2 GB of available RAM for running `llama3.2:1b` model (smaller alternative)
+  - Additional 1-2 GB for the Python application and operating system
+
+- **Storage Requirements**:
+  - Approximately 8 GB for `llama3.2-vision:latest` model
+  - Approximately 1.5 GB for `llama3.2:1b` model
+  - 50-100 MB for the application and dependencies
+
 - Python 3.8+
 - [Ollama](https://ollama.ai/) installed locally with the following models:
   - `llama3.2-vision:latest` (for text and image analysis)
