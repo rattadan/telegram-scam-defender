@@ -39,7 +39,7 @@ A powerful Telegram moderation bot that uses local LLMs via Ollama to detect and
 
    ```bash
    git clone https://github.com/rattadan/telegram-scam-defender.git
-   cd telegram-ban-bot_ollama
+   cd telegram-scam-defender
    ```
 
 2. **Create a virtual environment**
